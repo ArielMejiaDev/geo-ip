@@ -1,65 +1,83 @@
-# Resolve a visitor's country and location from their IP address in Laravel — modern syntax, swappable drivers (MaxMind GeoLite2, ip-api, ipinfo), zero external calls when you want them.
+# GeoIp for Laravel
+
+Resolve a visitor's country and geolocation from their IP address using swappable drivers — DB-IP Lite (default, free, no signup), MaxMind GeoLite2, ip-api, or ipinfo.
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/arielmejiadev/geo-ip.svg?style=flat-square)](https://packagist.org/packages/arielmejiadev/geo-ip)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/arielmejiadev/geo-ip/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/arielmejiadev/geo-ip/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/arielmejiadev/geo-ip/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/arielmejiadev/geo-ip/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/arielmejiadev/geo-ip.svg?style=flat-square)](https://packagist.org/packages/arielmejiadev/geo-ip)
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+## Documentation
 
-## Support us
+Full documentation is available at **[arielmejiadev.github.io/geo-ip](https://arielmejiadev.github.io/geo-ip/)**.
 
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/geo-ip.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/geo-ip)
-
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
-
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
-
-## Installation
-
-You can install the package via composer:
+## Quick Start
 
 ```bash
 composer require arielmejiadev/geo-ip
+php artisan geo-ip:install
 ```
 
-You can publish and run the migrations with:
-
-```bash
-php artisan vendor:publish --tag="geo-ip-migrations"
-php artisan migrate
-```
-
-You can publish the config file with:
-
-```bash
-php artisan vendor:publish --tag="geo-ip-config"
-```
-
-This is the contents of the published config file:
-
-```php
-return [
-];
-```
-
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag="geo-ip-views"
-```
+This publishes the config and downloads the free DB-IP Lite database (no signup or API key needed).
 
 ## Usage
 
+### One-shot lookups
+
 ```php
-$geoIp = new ArielMejiaDev\GeoIp();
-echo $geoIp->echoPhrase('Hello, ArielMejiaDev!');
+use ArielMejiaDev\GeoIp\Facades\GeoIp;
+
+GeoIp::country('8.8.8.8');       // 'United States'
+GeoIp::countryCode('8.8.8.8');   // 'US'
+GeoIp::city('8.8.8.8');          // 'Mountain View'
+GeoIp::timezone('8.8.8.8');      // 'America/Los_Angeles'
+GeoIp::coordinates('8.8.8.8');   // ['latitude' => 37.386, 'longitude' => -122.084]
+```
+
+### Fluent API
+
+```php
+$ip = GeoIp::of('8.8.8.8');
+
+$ip->country();      // 'United States'
+$ip->is('US');       // true
+$ip->isIn(['US', 'CA', 'MX']); // true
+
+// Conditional logic
+GeoIp::of($ip)
+    ->whenCountry('US', fn ($ip) => handleUs($ip))
+    ->whenIn(['MX', 'CO', 'AR'], fn ($ip) => handleLatam($ip))
+    ->toArray();
+
+// From the current request
+GeoIp::fromRequest()->countryCode();
+```
+
+## Drivers
+
+| Driver | Env Value | Requirements |
+|--------|-----------|-------------|
+| DB-IP Lite | `dbip` (default) | `php artisan geo-ip:install` |
+| MaxMind GeoLite2 | `maxmind` | License key + `php artisan geo-ip:install --maxmind` |
+| ip-api.com | `ip-api` | None (45 req/min limit) |
+| ipinfo.io | `ipinfo` | `IPINFO_TOKEN` |
+| Null | `null` | None (for testing) |
+
+Set the driver in `.env`:
+
+```env
+GEOIP_DRIVER=dbip
 ```
 
 ## Testing
 
 ```bash
 composer test
+```
+
+Set the driver to `null` in your test environment to avoid external calls:
+
+```xml
+<env name="GEOIP_DRIVER" value="null"/>
 ```
 
 ## Changelog

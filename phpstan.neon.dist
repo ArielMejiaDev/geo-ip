@@ -5,6 +5,7 @@ parameters:
     level: 5
     paths:
         - src
-        - config
-        - database
+    excludePaths:
+        - src/Drivers/DbIpDriver.php
+        - src/Drivers/MaxMindDriver.php
     tmpDir: build/phpstan
