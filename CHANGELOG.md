@@ -2,6 +2,12 @@
 
 All notable changes to `geo-ip` will be documented in this file.
 
+## v1.0.1 - 2026-05-29
+
+### Bug Fix
+
+- Move `geoip2/geoip2` from `suggest` to `require` in `composer.json` — fixes `Class "GeoIp2\Database\Reader" not found` error when using the default `dbip` driver.
+
 ## v1.0.0 - 2026-05-29
 
 ### GeoIp v1.0.0
