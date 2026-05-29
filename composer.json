@@ -18,7 +18,8 @@
     "require": {
         "php": "^8.2",
         "spatie/laravel-package-tools": "^1.16",
-        "illuminate/contracts": "^12.0||^13.0"
+        "illuminate/contracts": "^12.0||^13.0",
+        "geoip2/geoip2": "^3.0"
     },
     "require-dev": {
         "laravel/pint": "^1.14",
@@ -32,9 +33,6 @@
         "phpstan/phpstan-deprecation-rules": "^2.0",
         "phpstan/phpstan-phpunit": "^2.0",
         "spatie/laravel-ray": "^1.35"
-    },
-    "suggest": {
-        "geoip2/geoip2": "Required to use the MaxMind GeoLite2 driver (^3.0)."
     },
     "autoload": {
         "psr-4": {
