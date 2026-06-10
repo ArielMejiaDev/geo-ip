@@ -2,6 +2,12 @@
 
 All notable changes to `geo-ip` will be documented in this file.
 
+## v1.0.3 - 2026-06-10
+
+### Added
+
+- **CLAUDE.md** — AI guidelines and skills file with project architecture, code conventions, testing patterns, and release workflow
+
 ## v1.0.2 - 2026-06-10
 
 ### Added
