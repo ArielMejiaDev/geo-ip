@@ -26,6 +26,14 @@ Or update `config/geo-ip.php` directly:
 'driver' => 'maxmind',
 ```
 
+### At Runtime
+
+You can also override the driver on the fly using the `driver()` method. See [Runtime Driver](/advanced/runtime-driver) for details.
+
+```php
+GeoIp::driver('ip-api')->lookup('8.8.8.8');
+```
+
 ## Data Fields
 
 All drivers return an `IpData` value object with these fields. Some fields may be `null` depending on the driver's capabilities:

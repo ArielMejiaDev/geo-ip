@@ -3,8 +3,14 @@
 namespace ArielMejiaDev\GeoIp;
 
 use ArielMejiaDev\GeoIp\Contracts\Driver;
+use ArielMejiaDev\GeoIp\Drivers\DbIpDriver;
+use ArielMejiaDev\GeoIp\Drivers\IpApiDriver;
+use ArielMejiaDev\GeoIp\Drivers\IpInfoDriver;
+use ArielMejiaDev\GeoIp\Drivers\MaxMindDriver;
+use ArielMejiaDev\GeoIp\Drivers\NullDriver;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Traits\Macroable;
+use InvalidArgumentException;
 
 class GeoIp
 {
@@ -13,7 +19,37 @@ class GeoIp
     public function __construct(
         protected Driver $driver,
         protected ?int $cacheTtl = null,
+        protected array $config = [],
     ) {}
+
+    public function driver(string $name): self
+    {
+        return new self(
+            driver: $this->createDriver($name, $this->config),
+            cacheTtl: $this->cacheTtl,
+            config: $this->config,
+        );
+    }
+
+    public static function createDriver(string $name, array $config): Driver
+    {
+        return match ($name) {
+            'dbip' => new DbIpDriver(
+                databasePath: $config['drivers']['dbip']['database_path']
+                    ?? storage_path('app/geoip/dbip-city-lite.mmdb'),
+            ),
+            'maxmind' => new MaxMindDriver(
+                databasePath: $config['drivers']['maxmind']['database_path']
+                    ?? storage_path('app/geoip/GeoLite2-City.mmdb'),
+            ),
+            'ip-api' => new IpApiDriver,
+            'ipinfo' => new IpInfoDriver(
+                token: $config['drivers']['ipinfo']['token'] ?? '',
+            ),
+            'null' => new NullDriver,
+            default => throw new InvalidArgumentException("Unsupported GeoIp driver [{$name}]."),
+        };
+    }
 
     public function of(string $ip): IpAddress
     {

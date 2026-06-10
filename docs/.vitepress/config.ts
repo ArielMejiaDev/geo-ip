@@ -40,6 +40,7 @@ export default defineConfig({
         text: 'Advanced',
         items: [
           { text: 'Caching', link: '/advanced/caching' },
+          { text: 'Runtime Driver', link: '/advanced/runtime-driver' },
           { text: 'Custom Drivers', link: '/advanced/custom-drivers' },
           { text: 'Macros', link: '/advanced/macros' },
           { text: 'Testing', link: '/advanced/testing' },

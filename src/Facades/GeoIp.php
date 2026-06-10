@@ -7,6 +7,7 @@ use ArielMejiaDev\GeoIp\IpData;
 use Illuminate\Support\Facades\Facade;
 
 /**
+ * @method static \ArielMejiaDev\GeoIp\GeoIp driver(string $name)
  * @method static IpAddress of(string $ip)
  * @method static IpAddress fromRequest()
  * @method static IpData lookup(string $ip)

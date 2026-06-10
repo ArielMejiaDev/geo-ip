@@ -2,6 +2,14 @@
 
 All notable changes to `geo-ip` will be documented in this file.
 
+## v1.0.2 - 2026-06-10
+
+### Added
+
+- **Runtime driver switching** — New `driver()` method to override the configured driver on the fly (`GeoIp::driver('ip-api')->lookup(...)`)
+- **Cross-driver integration test** — Verifies DB-IP and ip-api return consistent results for a Cincinnati Union Terminal area IP
+- **Documentation** — New "Runtime Driver" page with usage examples, cross-driver verification test, and updates to the drivers overview and testing pages
+
 ## v1.0.1 - 2026-05-29
 
 ### Bug Fix

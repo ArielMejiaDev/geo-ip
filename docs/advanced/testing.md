@@ -61,6 +61,29 @@ A typical `phpunit.xml` setup for testing:
 </phpunit>
 ```
 
+## Switching Drivers at Runtime
+
+Use the `driver()` method to swap drivers within a test — for example, to compare results from a local database against a remote API:
+
+```php
+use ArielMejiaDev\GeoIp\GeoIp;
+
+it('resolves a Cincinnati IP similarly with dbip and ip-api', function () {
+    $geoip = app(GeoIp::class);
+
+    $dbip  = $geoip->driver('dbip')->lookup('129.137.1.1');
+    $ipApi = $geoip->driver('ip-api')->lookup('129.137.1.1');
+
+    expect($dbip->countryCode)->toBe('US')
+        ->and($ipApi->countryCode)->toBe('US');
+
+    expect($dbip->city)->toBe('Cincinnati')
+        ->and($ipApi->city)->toBe('Cincinnati');
+});
+```
+
+See [Runtime Driver](/advanced/runtime-driver#example-cross-driver-verification) for a full example.
+
 ## Faking Specific Data
 
 When your tests need specific geolocation data, bind a fake driver:
